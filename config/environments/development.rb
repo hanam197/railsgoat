@@ -2,6 +2,10 @@
 Railsgoat::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
   config.hosts << '.svc.cluster.local'
+  config.hosts << "rails8.online:3000"
+  config.hosts << "rails8.online"
+  config.hosts << "www.rails8.online"
+  config.hosts << "61.14.234.11"
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
