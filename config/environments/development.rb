@@ -29,6 +29,9 @@ Railsgoat::Application.configure do
   # Do not compress assets
   config.assets.compress = false
 
+  # Run on port 3001
+  config.port = 3001
+
   # Expands the lines which load the assets
   config.assets.debug = true
 
