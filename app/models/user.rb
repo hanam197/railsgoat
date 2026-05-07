@@ -39,22 +39,20 @@ class User < ApplicationRecord
   private
 
   def self.authenticate(email, password)
-    auth = nil
-    user = find_by_email(email)
-    raise "#{email} doesn't exist!" if !(user)
-    if user.password == Digest::MD5.hexdigest(password)
-      auth = user
-    else
-      raise "Incorrect Password!"
-    end
-    return auth
-  end
+ user = find_by_email(email)
+ if user and user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)
+     user
+ else
+    raise "Invalid Credentials Supplied"
+ end
+end
 
-  def hash_password
-    if will_save_change_to_password?
-      self.password = Digest::MD5.hexdigest(self.password)
-    end
+def hash_password
+  if self.password.present?
+    self.password_salt = BCrypt::Engine.generate_salt
+    self.password_hash = BCrypt::Engine.hash_secret(self.password, self.password_salt)
   end
+end
 
   def generate_token(column)
     loop do
