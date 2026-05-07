@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+# Thêm thư viện xử lý file
+require 'fileutils'
+
 class Benefits < ApplicationRecord
 
   def self.save(file, backup = false)
@@ -12,7 +15,9 @@ class Benefits < ApplicationRecord
 
   def self.make_backup(file, data_path, full_file_name)
     if File.exist?(full_file_name)
-      silence_streams(STDERR) { system("cp #{full_file_name} #{data_path}/bak#{Time.zone.now.to_i}_#{file.original_filename}") }
+      #silence_streams(STDERR) { system("cp #{full_file_name} #{data_path}/bak#{Time.zone.now.to_i}_#{file.original_filename}") }
+      #Fix Command Injection: Sử dụng FileUtils.cp thay vì gọi system() để tránh Command Injection
+      FileUtils.cp(full_file_name, "#{data_path}/bak#{Time.zone.now.to_i}_#{file.original_filename}")
     end
   end
 
