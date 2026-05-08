@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2017_10_07_010129) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_08_123444) do
   create_table "analytics", force: :cascade do |t|
     t.string "ip_address"
     t.string "referrer"
@@ -98,6 +98,8 @@ ActiveRecord::Schema[8.0].define(version: 2017_10_07_010129) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string "auth_token"
+    t.string "password_hash"
+    t.string "password_salt"
   end
 
   create_table "work_infos", force: :cascade do |t|
