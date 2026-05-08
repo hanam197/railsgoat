@@ -9,7 +9,6 @@ class SessionsController < ApplicationController
   end
 
   def create
-    path = params[:url].present? ? params[:url] : home_dashboard_index_path
     begin
       # Normalize the email address, why not
       user = User.authenticate(params[:email].to_s.strip.downcase, params[:password])
@@ -23,7 +22,7 @@ class SessionsController < ApplicationController
       else
         session[:user_id] = user.id
       end
-      redirect_to post_authentication_redirect_path(path: path)
+      redirect_to post_authentication_redirect_path
     else
       flash[:error] = e.message
       render "sessions/new"
@@ -40,9 +39,19 @@ class SessionsController < ApplicationController
 
   def post_authentication_redirect_path(default_path: home_dashboard_index_path)
     path = params[:url] || default_path
+    Rails.logger.info("Checking redirect path: '#{path}'")
+    
+    # Block external URLs (Open Redirect prevention)
+    if path.start_with?('http://', 'https://', '//')
+      Rails.logger.warn("Path '#{path}' is external - blocked for security ✗")
+      return default_path
+    end
+    
     Rails.application.routes.recognize_path(path)
+    Rails.logger.info("Path '#{path}' is valid ✓")
     path
-  rescue ActionController::RoutingError
+  rescue ActionController::RoutingError => e
+    Rails.logger.warn("Path '#{path}' is invalid ✗ - Error: #{e.message}")
     default_path
   end
 end
