@@ -23,7 +23,7 @@ class UsersController < ApplicationController
     @user = current_user
   end
 
-    def update
+  def update
     message = false
 
     user = current_user
