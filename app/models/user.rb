@@ -2,6 +2,8 @@
 require "encryption"
 
 class User < ApplicationRecord
+  attr_accessor :password, :password_confirmation
+
   validates :password, presence: true,
                        confirmation: true,
                        length: {within: 6..40},
